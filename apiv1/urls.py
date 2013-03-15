@@ -17,19 +17,14 @@
 
 from django.conf.urls import patterns, include, url
 
-# Uncomment the next two lines to enable the admin:
-from django.contrib import admin
-admin.autodiscover()
+RE_IP = r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+RE_MAC = r'[0-9a-fA-F]{12}'
+RE_DATE = r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
 
-urlpatterns = patterns(
-    '',
-    (r'^apiv1/', include('apiv1.urls')),
-    # Examples:
-    # url(r'^$', 'iphistdbapi.views.home', name='home'),
-    # url(r'^iphistdbapi/', include('iphistdbapi.foo.urls')),
+p = (r'^ip/(?P<ip>{0})/$'.format(RE_IP), 'ip'), \
+    (r'^ip/(?P<ip>{0})/(?P<date>{1})/$'.format(RE_IP, RE_DATE), 'ipbydate'), \
+    (r'^mac/(?P<mac>{0})/$'.format(RE_MAC), 'mac'), \
+    (r'^mac/(?P<mac>{0})/(?P<date>{1})/$'.format(RE_MAC, RE_DATE), 'macbydate'),
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-    # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)))
+urlpatterns = patterns('apiv1.views', *p)

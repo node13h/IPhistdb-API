@@ -15,21 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with IPhistdb-API.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import patterns, include, url
-
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
-admin.autodiscover()
+from apiv1.models import APIKey
 
-urlpatterns = patterns(
-    '',
-    (r'^apiv1/', include('apiv1.urls')),
-    # Examples:
-    # url(r'^$', 'iphistdbapi.views.home', name='home'),
-    # url(r'^iphistdbapi/', include('iphistdbapi.foo.urls')),
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+class APIKeyAdmin(admin.ModelAdmin):
+    fields = ('app',)
+    list_display = ('app', 'key')
 
-    # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)))
+admin.site.register(APIKey, APIKeyAdmin)
