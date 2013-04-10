@@ -28,10 +28,10 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',      # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': config.get('MainDB', 'db'),        # Or path to database file if using sqlite3.
-        'USER': config.get('MainDB', 'user'),      # Not used with sqlite3.
-        'PASSWORD': config.get('MainDB', 'pass'),  # Not used with sqlite3.
-        'HOST': config.get('MainDB', 'host'),      # Set to empty string for localhost. Not used with sqlite3.
+        'NAME': config.get('App', 'db'),        # Or path to database file if using sqlite3.
+        'USER': config.get('App', 'dbuser'),      # Not used with sqlite3.
+        'PASSWORD': config.get('App', 'dbpass'),  # Not used with sqlite3.
+        'HOST': config.get('App', 'dbhost'),      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                                # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -94,7 +94,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '__-=p(bsdknFAWQF87rtjc..;owrjh@$$+89u32jkdkwhi3^_2^+fx'
+SECRET_KEY = config.get('App', 'secret_key')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
