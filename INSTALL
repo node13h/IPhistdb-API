@@ -1,0 +1,121 @@
+This application is tested on Ubuntu 12.04, but should work on any 
+distribution as long as requirements are satisfied.
+
+
+Requirements
+============
+
+IPhistdb (https://github.com/node13h/IPhistdb) is needed for IPhistdb-API to work.
+Python version 2.6 or later.
+uWSGI version 1.0.3 or later. (on Ubuntu: aptitude install uwsgi)
+Nginx (on Ubuntu: aptitude install nginx)
+
+
+Short process flow description
+==============================
+
+DHCP servers log lease events in logfile. Data from these logs collected 
+by IPhistdb/process.py and imported into SQL database (history table).
+Each lease may have multiple records, because DHCP client re-leases
+IP address periodically (every 1/2 of the lease-time typically).
+
+The IPhistdb/aggregate.py is also run daily, to aggregate lease data from
+history table into aggregated table. There is no way to safely aggregate data
+straight from the log file into aggregated table, because DHCP leases can
+last years, and log files may be rotated during that time leading to loss
+of information about lease start. Also there can be more than one DHCP
+server(clustering), so different parts of the same lease may end up recorded 
+in logfiles of different servers.
+
+I recommend you to schedule run of IPhistdb/aggregate.py on the same server
+IPhistdb-API app will be running on. You need a copy of IPhistdb on API server
+anyway.
+
+See doc/IPhistdb-API.png diagram for visual explanation of the process.
+
+
+Servers
+=======
+
+Whole project can be distributed to multiple servers or can be run on only
+one server(including DHCP service) for small installations.
+
+
+Databases
+=========
+
+Two databases needed for this application - one for Django app itself(any 
+type Django ORM supports), and one with aggregated IP history data (MySQL).
+Both databases may reside on different servers or be put on single server.
+
+
+Frontend and backend
+====================
+
+I recommend to use uWSGI as backend, and Nginx as frontend. For very small
+installations uWSGI can be used alone - in this case http module should be 
+installed and enabled in configuration file.
+
+
+Installation instructions
+=========================
+
+* git clone https://github.com/node13h/IPhistdb somewhere in your 
+  system, for example /opt/IPhistdb
+
+* Create dedicated OS user for Django app. Let's call it 'wiphist'.
+
+* Copy doc/api-example.ini to /etc/IPhistdb/api.ini.
+  Edit secret_key, path_to_iphistdb, static_root and database stuff.
+
+* Copy doc/uwsgi-app-example.ini to <uwsgi-config-dir>/apps-enabled/iphistdbapi.ini
+
+* As wiphist user:
+   * create directory for Django stuff: mkdir -p ~./main
+   * create python virtual environment: virtualenv ~/main/venv
+   * enter virtual environment: source ~/main/venv/bin/activate
+   * pip install django
+   * pip install MySQL-python  # You may need to install some mysql dev 
+                               # packages in OS
+   * Put IPhistdb-API app in ~/main/
+   * the resulting directory tree should look like this:
+
+     ├── IPhistdb-API
+     │   ├── API
+     │   ├── apiv1
+     │   ├── COPYING
+     │   ├── DEBUG.sh
+     │   ├── doc
+     │   ├── INSTALL
+     │   ├── iphistdbapi
+     │   ├── manage.py
+     │   ├── README.md
+     │   └── requirements.txt
+     └── venv
+         ├── bin
+         ├── include
+         ├── lib
+         └── local
+
+   * Edit ~/main/IPhistdb-API/iphistdbapi/settings.py if needed
+   * cd ~/main/IPhistdb-API
+   * python manage.py syncdb
+   * python manage.py collectstatic
+
+* Edit <uwsgi-config-dir>/apps-enabled/iphistdbapi.ini to reflect the paths of the
+  above step. Note: the owner group of uwsgi socket should match nginx group, or
+  else nginx will not be able to connect to uwsgi backend.
+
+* Copy doc/nginx-site-example to <nginx-config-dir>/sites-enabled/iphistdb. Edit it  
+  to fit your system. 
+
+* service start uwsgi
+
+* service start nginx
+
+* You should now be able to open Django admin interface http://<hostname>/admin. It
+  will prompt you to create superuser account.
+
+* Read API file for interface description and examples.
+
+

@@ -1,0 +1,60 @@
+This app provides REST api over HTTP.
+
+Installation instructions are in INSTALL file.
+
+For clients to be able to access API - keys need to be created.
+Go to the Django admin interface http://<hostname>/admin and add API key.
+
+When making request API key should be provided by the client with every
+request in APIKey HTTP header.
+
+Now, given you have aggregated IP history database filled with some data you 
+can test it from commandline:
+
+curl -H "APIKey: <Your-API-Key-Here>" "http://<hostname>/apiv1/ip/A.B.C.D/"
+or
+curl -H "APIKey: <Your-API-Key-Here>" "http://<hostname>/apiv1/ip/A.B.C.D/YYYY-MM-DD hh:mm:ss/"
+or
+curl -H "APIKey: <Your-API-Key-Here>" "http://<hostname>/apiv1/mac/xxxxxxxxxxxx/"
+or
+curl -H "APIKey: <Your-API-Key-Here>" "http://<hostname>/apiv1/mac/xxxxxxxxxxxx/YYYY:MM:DD hh:mm:ss/"
+
+Should return JSON encoded object(s) of the following format:
+
+{
+"giaddr": "A.B.C.D",
+"end": "YYYY-MM-DD hh:mm:ss",
+"circuit_id": "vendor-and-config-dependent-string",
+"remote_id": "vendor-and-config-dependent-string",
+"start": "YYYY-MM-DD hh:mm:ss",
+"mac": "xxxxxxxxxxxx",
+"ip": "A.B.C.D"
+}
+
+
+API v1
+======
+
+* /apiv1/ip/<IP>/
+
+  Returns array of JSON objects with all leases for given IP in aggregated DB. Use with care
+  because there can be millions of records (depending on cleanup policy).
+  If there are no corresponding records in DB - returns empty set.
+
+* /apiv1/ip/<IP>/<YYYY-DD-MM hh:mm:ss>/
+
+  Returns one JSON object with lease for given IP, which was active on a given date.
+  If there are no corresponding records in DB - returns empty set.
+
+* /apiv1/ip/<MAC>/
+
+  Returns array of JSON objects with all leases for given cpe MAC in aggregated DB. Use with care
+  because there can be millions of records (depending on cleanup policy).
+  If there are no corresponding records in DB - returns empty set.
+
+* /apiv1/ip/<MAC>/<YYYY-DD-MM hh:mm:ss>/
+
+  Returns one JSON object with lease for given cpe MAC, which was active on a given date.
+  If there are no corresponding records in DB - returns empty set.
+
+
