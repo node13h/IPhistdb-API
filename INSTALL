@@ -71,7 +71,8 @@ Installation instructions
 * Copy doc/uwsgi-app-example.ini to <uwsgi-config-dir>/apps-enabled/iphistdbapi.ini
 
 * As wiphist user:
-   * create directory for Django stuff: mkdir -p ~./main
+   * create directory for Django stuff: mkdir -p ~/main
+   * create directory for static files: mkdir -p ~/main/static
    * create python virtual environment: virtualenv ~/main/venv
    * enter virtual environment: source ~/main/venv/bin/activate
    * pip install django
@@ -80,22 +81,11 @@ Installation instructions
    * Put IPhistdb-API app in ~/main/
    * the resulting directory tree should look like this:
 
-     ├── IPhistdb-API
-     │   ├── API
-     │   ├── apiv1
-     │   ├── COPYING
-     │   ├── DEBUG.sh
-     │   ├── doc
-     │   ├── INSTALL
-     │   ├── iphistdbapi
-     │   ├── manage.py
-     │   ├── README.md
-     │   └── requirements.txt
-     └── venv
-         ├── bin
-         ├── include
-         ├── lib
-         └── local
+      wiphist
+      └── main
+          ├── IPhistdb-API
+          ├── static
+          └── venv
 
    * Edit ~/main/IPhistdb-API/iphistdbapi/settings.py if needed
    * cd ~/main/IPhistdb-API
