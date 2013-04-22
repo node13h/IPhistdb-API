@@ -8,16 +8,21 @@ Go to the Django admin interface http://<hostname>/admin and add API key.
 When making request API key should be provided by the client with every
 request in APIKey HTTP header.
 
+By default all dates are in UTC timezone. Using optional TZ HTTP header another
+timezone can be selected for lookup/output dates. It is highly advised to use
+this feature, because it converts all dates correctly, according to
+historical timezone database.
+
 Now, given you have aggregated IP history database filled with some data you 
 can test it from commandline:
 
-curl -H "APIKey: <Your-API-Key-Here>" "http://<hostname>/apiv1/ip/A.B.C.D/"
+curl -H "APIKey: <Your-API-Key-Here>" -H "TZ: <Timezone>" http://<hostname>/apiv1/ip/A.B.C.D/"
 or
-curl -H "APIKey: <Your-API-Key-Here>" "http://<hostname>/apiv1/ip/A.B.C.D/YYYY-MM-DD hh:mm:ss/"
+curl -H "APIKey: <Your-API-Key-Here>" -H "TZ: <Timezone>" "http://<hostname>/apiv1/ip/A.B.C.D/YYYY-MM-DD hh:mm:ss/"
 or
-curl -H "APIKey: <Your-API-Key-Here>" "http://<hostname>/apiv1/mac/xxxxxxxxxxxx/"
+curl -H "APIKey: <Your-API-Key-Here>" -H "TZ: <Timezone>" "http://<hostname>/apiv1/mac/xxxxxxxxxxxx/"
 or
-curl -H "APIKey: <Your-API-Key-Here>" "http://<hostname>/apiv1/mac/xxxxxxxxxxxx/YYYY:MM:DD hh:mm:ss/"
+curl -H "APIKey: <Your-API-Key-Here>" -H "TZ: <Timezone>" "http://<hostname>/apiv1/mac/xxxxxxxxxxxx/YYYY:MM:DD hh:mm:ss/"
 
 Should return JSON encoded object(s) of the following format:
 
@@ -28,9 +33,15 @@ Should return JSON encoded object(s) of the following format:
 "remote_id": "vendor-and-config-dependent-string",
 "start": "YYYY-MM-DD hh:mm:ss",
 "mac": "xxxxxxxxxxxx",
-"ip": "A.B.C.D"
+"ip": "A.B.C.D",
+"tz": "UTC"
 }
 
+Examples:
+
+curl -H "APIKey: bla-bla-bla-key" -H "TZ: Europe/Vilnius" "http://localhost/apiv1/ip/192.168.0.5/2013-01-15 23:00:01/"
+
+curl -H "APIKey: 2345235235235235" -H "TZ: UTC" "http://localhost/apiv1/mac/00deadbeef00/"
 
 API v1
 ======
