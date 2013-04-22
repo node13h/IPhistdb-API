@@ -19,10 +19,16 @@ from models import APIKey
 from django.conf import settings
 from aggdb import AggDB
 import json
+import datetime
+import pytz
 
 
 class AuthenticationException(Exception):
     pass
+
+
+def requested_tz(request):
+    return pytz.timezone(request.META.get("HTTP_TZ", "UTC"))
 
 
 def require_apikey(fn):
@@ -38,6 +44,7 @@ def require_apikey(fn):
 def ip(request, ip):
 
     adb = AggDB()
+    adb.lookup_tz = requested_tz(request)
     adb.connect(settings.APIV1_AGGDB_HOST,
                 settings.APIV1_AGGDB_USER,
                 settings.APIV1_AGGDB_PASS,
@@ -56,6 +63,7 @@ def ip(request, ip):
 @require_apikey
 def ipbydate(request, ip, date):
     adb = AggDB()
+    adb.lookup_tz = requested_tz(request)
     adb.connect(settings.APIV1_AGGDB_HOST,
                 settings.APIV1_AGGDB_USER,
                 settings.APIV1_AGGDB_PASS,
@@ -63,7 +71,8 @@ def ipbydate(request, ip, date):
 
     body = []
 
-    for item in adb.lookup_by_ip(ip, date):
+    dt = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+    for item in adb.lookup_by_ip(ip, dt):
         body.append(item)
 
     adb.close()
@@ -75,6 +84,7 @@ def ipbydate(request, ip, date):
 def mac(request, mac):
 
     adb = AggDB()
+    adb.lookup_tz = requested_tz(request)
     adb.connect(settings.APIV1_AGGDB_HOST,
                 settings.APIV1_AGGDB_USER,
                 settings.APIV1_AGGDB_PASS,
@@ -93,6 +103,7 @@ def mac(request, mac):
 @require_apikey
 def macbydate(request, mac, date):
     adb = AggDB()
+    adb.lookup_tz = requested_tz(request)
     adb.connect(settings.APIV1_AGGDB_HOST,
                 settings.APIV1_AGGDB_USER,
                 settings.APIV1_AGGDB_PASS,
@@ -100,7 +111,8 @@ def macbydate(request, mac, date):
 
     body = []
 
-    for item in adb.lookup_by_mac(mac, date):
+    dt = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+    for item in adb.lookup_by_mac(mac, dt):
         body.append(item)
 
     adb.close()
