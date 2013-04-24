@@ -66,7 +66,7 @@ Installation instructions
 * Create dedicated OS user for Django app. Let's call it 'wiphist'.
 
 * Copy doc/api-example.ini to /etc/IPhistdb/api.ini.
-  Edit secret_key, path_to_iphistdb, static_root and database stuff.
+  Edit secret_key, static_root and database stuff.
 
 * Copy doc/uwsgi-app-example.ini to <uwsgi-config-dir>/apps-enabled/iphistdbapi.ini
 
@@ -75,6 +75,7 @@ Installation instructions
    * create directory for static files: mkdir -p ~/main/static
    * create python virtual environment: virtualenv ~/main/venv
    * enter virtual environment: source ~/main/venv/bin/activate
+   * run python /opt/IPhistdb/setup.py install # this will install required modules in site-packages of virtual environment
    * pip install django
    * pip install MySQL-python  # You may need to install some mysql dev 
                                # packages in OS
