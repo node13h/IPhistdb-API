@@ -17,7 +17,7 @@
 from django.http import HttpResponse
 from models import APIKey
 from django.conf import settings
-from aggdb import AggDB
+from iphistdb.aggdb import AggDB
 import json
 import datetime
 import pytz
