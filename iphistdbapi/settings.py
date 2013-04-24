@@ -1,5 +1,4 @@
 # Django settings for iphistdbapi project.
-import sys
 import os
 from ConfigParser import RawConfigParser
 
@@ -7,9 +6,6 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 config = RawConfigParser()
 config.read('/etc/IPhistdb/api.ini')
-
-# Path to search for IPhistdb libraries:
-sys.path.append(config.get('App', 'path_to_iphistdb'))
 
 APIV1_AGGDB_HOST = config.get('AggDB', 'host')
 APIV1_AGGDB_USER = config.get('AggDB', 'user')

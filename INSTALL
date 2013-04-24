@@ -75,7 +75,7 @@ Installation instructions
    * create directory for static files: mkdir -p ~/main/static
    * create python virtual environment: virtualenv ~/main/venv
    * enter virtual environment: source ~/main/venv/bin/activate
-   * run python /opt/IPhistdb/setup.py install # this will install required modules in site-packages of virtual environment
+   * run pip install /opt/IPhistdb # this will install required modules in site-packages of virtual environment
    * pip install django
    * pip install MySQL-python  # You may need to install some mysql dev 
                                # packages in OS
