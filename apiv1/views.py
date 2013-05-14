@@ -57,7 +57,7 @@ def ip(request, ip):
 
     adb.close()
 
-    return HttpResponse(json.dumps(body, encoding="latin_1"))
+    return HttpResponse(json.dumps(body, encoding="latin_1"), mimetype="application/json")
 
 
 @require_apikey
@@ -77,7 +77,7 @@ def ipbydate(request, ip, date):
 
     adb.close()
 
-    return HttpResponse(json.dumps(body, encoding="latin_1"))
+    return HttpResponse(json.dumps(body, encoding="latin_1"), mimetype="application/json")
 
 
 @require_apikey
@@ -97,7 +97,7 @@ def mac(request, mac):
 
     adb.close()
 
-    return HttpResponse(json.dumps(body, encoding="latin_1"))
+    return HttpResponse(json.dumps(body, encoding="latin_1"), mimetype="application/json")
 
 
 @require_apikey
@@ -117,4 +117,4 @@ def macbydate(request, mac, date):
 
     adb.close()
 
-    return HttpResponse(json.dumps(body, encoding="latin_1"))
+    return HttpResponse(json.dumps(body, encoding="latin_1"), mimetype="application/json")
